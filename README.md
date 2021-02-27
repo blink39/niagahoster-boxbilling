@@ -21,4 +21,5 @@
 
 ## How to Use
 
+- Change file "example.php" to "bb-config.php"
 - Run "composer up -d" on root directory (please use composer ver >= 7.3 )
