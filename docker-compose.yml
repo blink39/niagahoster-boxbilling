@@ -1,0 +1,46 @@
+version: '3'
+services:
+  web:
+    image: nginx:stable
+    volumes:
+      - ./docker-nginx.conf:/etc/nginx/nginx.conf
+      - '.:/var/www/html'
+    ports:
+      - 8004:8004
+    networks:
+      backend:
+  php:
+    image: chialab/php:7.4-fpm
+    volumes:
+      - '.:/var/www/html'
+    networks:
+      backend:
+    depends_on:
+      - database
+    restart: always
+  database:
+    image: mysql:5
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks:
+      backend:
+    restart: always
+  phpmyadmin:
+    depends_on:
+      - database
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 5051:80
+    environment:
+      PMA_HOST: database
+    networks:
+      backend:
+networks:
+  backend:
